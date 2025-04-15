@@ -1,0 +1,60 @@
+Task Description
+
+1. Задание: Разработка основы для рабочего приложения
+придумать задание
+создать проект в IDEA с помощью Spring Boot generator
+добавить зависимости (spring-boot-starter-web, lombok )
+создать entity, dto, repository, service, controller
+проверить работоспособность с помощью postman
+Цель:
+Разработать основу для рабочего приложения, представляющего собой мини-проект. В ходе выполнения задания необходимо создать основные компоненты приложения: entity, repository, service и controller.
+
+Описание задания:
+Необходимо создать приложение, которое будет выполнять CRUD (Create, Read, Update, Delete) операции для определённой сущности с использованием коллекций для хранения данных. Приложение должно позволять добавлять, редактировать, удалять и просматривать объекты этой сущности.
+
+Требования:
+Entity:
+
+Создайте класс, представляющий сущность в системе (например, Product, Customer, Order и т.д.).
+Пример атрибутов для класса Product:
+Long id (уникальный идентификатор)
+String name (название продукта)
+String description (описание продукта)
+double price (цена продукта)
+int quantity (количество на складе)
+Repository:
+
+Создайте интерфейс YourEntityRepository, который будет содержать методы для работы с коллекцией объектов.
+Методы интерфейса YourEntityRepository:
+List<YourEntity> findAll()
+YourEntity findById(Long id)
+YourEntity save(YourEntity entity)
+void deleteById(Long id)
+Дополнительные методы для поиска по различным критериям (например, List<YourEntity> findByName(String name)).
+Service:
+
+Создайте интерфейс YourEntityService и его реализацию YourEntityServiceImpl, которая будет использовать коллекцию для хранения данных.
+Методы интерфейса YourEntityService:
+List<YourEntity> findAll()
+YourEntity findById(Long id)
+YourEntity save(YourEntity entity)
+void deleteById(Long id)
+Дополнительные методы для поиска по различным критериям (например, List<YourEntity> findByName(String name)).
+Controller:
+
+Создайте класс YourEntityController, помеченный аннотацией @RestController.
+Настройте маршруты для обработки следующих HTTP-запросов:
+GET /entities - получение списка всех объектов
+GET /entities/{id} - получение объекта по идентификатору
+POST /entities - добавление нового объекта
+PUT /entities/{id} - обновление существующего объекта
+DELETE /entities/{id} - удаление объекта по идентификатору
+Дополнительные маршруты для поиска по различным критериям (например, GET /entities/search?name={name}).
+
+Критерии оценки:
+Корректность и полнота реализации классов YourEntity, YourEntityRepository, YourEntityService, YourEntityServiceImpl и YourEntityController.
+Работоспособность CRUD операций.
+Тестирование созданного приложения (можно использовать JUnit для написания тестов).
+Чистота и читаемость кода.
+Рекомендации:
+Следуйте принципам SOLID.
