@@ -28,19 +28,18 @@ public class StudentService {
     }
 
     public StudentResponseDto addNewStudent(StudentRequestDto request) {
-        Student newStudentForAdd = new Student();
-        newStudentForAdd.setStudentFirstName(request.getFirstName());
-        newStudentForAdd.setStudentLastName(request.getLastName());
+        Student student = new Student();
 
-        Student studentAfterSave = repository.add(newStudentForAdd);
+        student.setStudentFirstName(request.getFirstName().trim());
+        student.setStudentLastName(request.getLastName().trim());
+        student.setStudentRegistrationDate(LocalDate.now());
+        student.setStudentAverageMark(0);
+        student.setAllStudentCourses(new ArrayList<>());
 
-        return new StudentResponseDto(studentAfterSave.getStudentId(),
-                studentAfterSave.getStudentLastName(),
-                studentAfterSave.getStudentFirstName(),
-                studentAfterSave.getStudentRegistrationDate(),
-                studentAfterSave.getStudentAverageMark(),
-                studentAfterSave.getAllStudentCourses()
-        );
+        Student studentAfterSave = repository.add(student);
+
+        return converter.studentToDto(studentAfterSave);
+
     }
     //findall
     public List<StudentResponseDto> findAllStudents () {
