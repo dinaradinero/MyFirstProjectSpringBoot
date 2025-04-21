@@ -36,9 +36,14 @@ public class StudentController {
         return service.findById(id);
     }
 
-    @GetMapping("/search/name")
-    public GeneralResponse<List<StudentResponseDto>> findStudentsByName (@RequestParam String studentName){
-        return service.findByName(studentName);
+    @GetMapping("/search/firstname")
+    public GeneralResponse<List<StudentResponseDto>> findStudentsByFirstName (@RequestParam String studentFirstName){
+        return service.findByFirstName(studentFirstName);
+    }
+
+    @GetMapping("/search/lastname")
+    public GeneralResponse<List<StudentResponseDto>> findStudentsByLastName (@RequestParam String studentLastName){
+        return service.findByLastName(studentLastName);
     }
 
     @GetMapping("/search/date")
@@ -57,8 +62,8 @@ public class StudentController {
     }
 
     @GetMapping("/courses_student_name")
-    public GeneralResponse<List<CourseResponseDto>> findCoursesByStudentName (@RequestBody String nameForSearch){
-        return service.findCoursesByStudentName(nameForSearch);
+    public GeneralResponse<List<CourseResponseDto>> findCoursesByStudentName (@RequestBody String firstName, @RequestBody String lastName){
+        return service.findCoursesByStudentName(firstName, lastName);
     }
 
     @PatchMapping("/{idStudent}/update_mark")
@@ -73,9 +78,9 @@ public class StudentController {
 
     }
 
-    @DeleteMapping("/{id}")
-    public GeneralResponse<Optional<StudentResponseDto>> deleteStudentById(@PathVariable Integer id) {
-        return service.deleteStudentById(id);
+    @DeleteMapping("/delete/{id}")
+    public void deleteStudentById(@PathVariable Integer id) {
+        service.deleteStudentById(id);
     }
 
 
