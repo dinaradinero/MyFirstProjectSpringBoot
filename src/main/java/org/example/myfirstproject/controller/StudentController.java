@@ -37,27 +37,27 @@ public class StudentController {
     }
 
     @GetMapping("/search/firstname")
-    public GeneralResponse<List<StudentResponseDto>> findStudentsByFirstName (@RequestParam String studentFirstName){
+    public List<StudentResponseDto> findStudentsByFirstName (@RequestParam String studentFirstName){
         return service.findByFirstName(studentFirstName);
     }
 
     @GetMapping("/search/lastname")
-    public GeneralResponse<List<StudentResponseDto>> findStudentsByLastName (@RequestParam String studentLastName){
+    public List<StudentResponseDto> findStudentsByLastName (@RequestParam String studentLastName){
         return service.findByLastName(studentLastName);
     }
 
     @GetMapping("/search/date")
-    public GeneralResponse<List<StudentResponseDto>> findByRegistrationDates (@RequestParam LocalDate start, @RequestParam LocalDate finish){
+    public List<StudentResponseDto> findByRegistrationDates (@RequestParam LocalDate start, @RequestParam LocalDate finish){
         return service.findByRegistrationDates(start, finish);
     }
 
     @GetMapping("/search/mark")
-    public GeneralResponse<List<StudentResponseDto>> findByAverageMark (@RequestParam Integer min, @RequestParam Integer max){
+    public List<StudentResponseDto> findByAverageMark (@RequestParam Integer min, @RequestParam Integer max){
         return service.findByAverageMark(min, max);
     }
 
     @GetMapping("/{id}/courses")
-    public GeneralResponse<List<CourseResponseDto>> findCoursesByStudentId (@PathVariable Integer id){
+    public List<CourseResponseDto> findCoursesByStudentId (@PathVariable Integer id){
         return service.findCoursesByStudentId(id);
     }
 

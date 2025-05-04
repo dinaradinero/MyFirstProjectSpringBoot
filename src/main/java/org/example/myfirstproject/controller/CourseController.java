@@ -34,11 +34,11 @@ public class CourseController {
     }
 
     @GetMapping("/search/name")
-    public GeneralResponse<List<CourseResponseDto>> findCourseByName (@RequestParam String name){
+    public List<CourseResponseDto> findCourseByName (@RequestParam String name){
         return service.findCourseByName(name);
     }
     @GetMapping("/search/students_by_name")
-    public GeneralResponse<List<StudentResponseDto>> findAllStudentsByCourseName (@RequestParam String name) {
+    public List<StudentResponseDto> findAllStudentsByCourseName (@RequestParam String name) {
         return service.findAllStudentsByCourseName(name);
     }
 

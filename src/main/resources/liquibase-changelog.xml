@@ -8,49 +8,22 @@
 
     <!--- добавляем все наши изменения в БД -->
 
-    <changeSet id="create.table.role" author="author1">
-        <createTable tableName="role">
-            <column name="id" type="INT" autoIncrement="true">
+    <changeSet id="create.table.course" author="author1">
+        <createTable tableName="course">
+            <column name="course_id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" />
             </column>
-            <column name="rolename" type="varchar (255)" />
-        </createTable>
-    </changeSet>
-
-    <changeSet id="create.table.manager" author="author2">
-        <createTable tableName="manager">
-            <column name="id" type="INT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+            <column name="course_name" type="varchar(255)">
+                <constraints nullable="false" />
             </column>
-            <column name="manager_name" type="varchar (255)" />
-            <column name="manager_password" type="varchar (255)" />
-            <column name="manager_email" type="varchar (255)" />
-            <column name="role_id" type="INT" />
         </createTable>
-        <addForeignKeyConstraint baseTableName="manager" baseColumnNames="role_id" constraintName="fk_manager_role_id"
-                                 referencedTableName="role"
-                                 referencedColumnNames="id"/>
     </changeSet>
 
-    <!--- внесем первоначальные данные в таблицы -->
-
-    <changeSet id="insert.default.data.roles" author="author1">
-        <insert tableName="role">
-            <column name="rolename" value="ADMIN"/>
-        </insert>
-        <insert tableName="role">
-            <column name="rolename" value="USER"/>
+    <changeSet id="insert.table.course" author="author1">
+        <insert tableName="course">
+            <column name="course_name" value="Java Pro" />
         </insert>
     </changeSet>
 
-
-    <changeSet id="insert.default.data.manager" author="author2">
-        <insert tableName="manager">
-            <column name="manager_name" value="Administrator"/>
-            <column name="manager_password" value="Pass12345"/>
-            <column name="manager_email" value="admin@company.com"/>
-            <column name="role_id" value="1"/>
-        </insert>
-    </changeSet>
 
 </databaseChangeLog>
