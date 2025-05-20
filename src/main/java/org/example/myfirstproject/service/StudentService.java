@@ -11,8 +11,10 @@ import org.example.myfirstproject.repository.course.CourseRepository;
 import org.example.myfirstproject.repository.student.StudentRepository;
 import org.example.myfirstproject.service.exception.NotFoundException;
 import org.example.myfirstproject.service.exception.ValidationException;
+import org.example.myfirstproject.service.mailutil.MailService;
 import org.example.myfirstproject.service.util.Converter;
 import org.hibernate.boot.model.internal.OptionalDeterminationSecondPass;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,6 +30,9 @@ public class StudentService {
     private CourseRepository courseRepository;
     private Converter converter;
 
+    @Autowired
+    private MailService mailService;
+
 
 //    public StudentService(StudentRepositoryInMemory repository, Converter converter) {
 //        this.repository = repository;
@@ -39,6 +44,14 @@ public class StudentService {
             throw new NotFoundException("Student can not be empty");
         }
 
+        if (request.getFirstName() == null || request.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("First name must not be empty");
+        }
+
+        if (request.getLastName() == null || request.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name must not be empty");
+        }
+
         Student student = new Student();
 
         student.setStudentFirstName(request.getFirstName().trim());
@@ -46,6 +59,7 @@ public class StudentService {
         student.setStudentRegistrationDate(LocalDate.now());
         student.setStudentAverageMark(0);
         student.setAllStudentCourses(new ArrayList<>());
+        student.setEmail(request.getEmail());
 
         Student studentAfterSave = repository.save(student);
 
@@ -174,10 +188,9 @@ public class StudentService {
         course.getCourseStudents().add(student);
         repository.save(student);
 
+        mailService.sendEnrollmentEmail(student, course);
+
         return Optional.of(converter.studentToDto(student));
-//        return repository.addCourseToStudent(idStudent, idCourse).stream()
-//                .map(student -> converter.studentToDto(student))
-//                .findFirst();
     }
 
     public void deleteStudentById(Integer studentId){
@@ -185,18 +198,12 @@ public class StudentService {
 
         for (Course course : student.getAllStudentCourses()) {
             course.getCourseStudents().remove(student);
+            courseRepository.save(course);
         }
 
         repository.delete(student);
     }
 
 
-
-//    public Optional<StudentResponseDto> deleteStudentById (Integer idForDelete){
-//        Optional<Student> student = repository.deleteStudentByStudentId(idForDelete);
-//
-//
-//        return new Optional.ofNullable(converter.studentToDto(student));
-//    }
 
 }

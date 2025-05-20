@@ -10,7 +10,7 @@ import org.example.myfirstproject.entity.Course;
 import org.example.myfirstproject.entity.Student;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,6 +20,7 @@ public class Converter {
         Student student = new Student();
         student.setStudentLastName(dto.getLastName());
         student.setStudentFirstName(dto.getFirstName());
+        student.setEmail(dto.getEmail());
         student.setStudentAverageMark(dto.getStudentAverageMark());
         return student;
     }
@@ -31,6 +32,7 @@ public class Converter {
         dto.setFirstName(student.getStudentFirstName());
         dto.setRegistrationDate(student.getStudentRegistrationDate());
         dto.setAverageMark(student.getStudentAverageMark());
+        dto.setEmail(student.getEmail());
         //dto.setCourses(student.getAllStudentCourses());
 
         if (student.getAllStudentCourses() != null) {

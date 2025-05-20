@@ -1,5 +1,8 @@
 package org.example.myfirstproject.repository.course;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.example.myfirstproject.entity.Course;
 import org.example.myfirstproject.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +19,10 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     List<Course> findCourseByCourseName(String courseName);
 
-    List<Student> findStudentByCourseName(String courseName);
+    //List<Student> findStudentByCourseName(String courseName);
+
+//    default List<Student> findStudentsByCourseName(String nameForSearch) {
+//
+//    }
 
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StudentRequestDto {
 
+    public String getEmail;
     @NotBlank(message = "Last name can not be blank")
     @Size(min = 1, max = 30, message = "Name length must be between 1 to 30 characters")
     @Pattern(regexp = "^[A-Za-z\\-\\s]+$", message = "Name can contain only latin characters")
@@ -23,5 +24,6 @@ public class StudentRequestDto {
     private String firstName;
 
     private Integer studentAverageMark;
+    private String email;
 
 }

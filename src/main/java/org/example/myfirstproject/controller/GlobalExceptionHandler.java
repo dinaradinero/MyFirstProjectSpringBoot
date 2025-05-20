@@ -2,6 +2,7 @@ package org.example.myfirstproject.controller;
 
 import jakarta.validation.ConstraintViolationException;
 import org.example.myfirstproject.service.exception.AlreadyExistException;
+import org.example.myfirstproject.service.exception.IllegalArgumentException;
 import org.example.myfirstproject.service.exception.NotFoundException;
 import org.example.myfirstproject.service.exception.ValidationException;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handlerValidationException(ValidationException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<String> handlerIllegalArgumentException(IllegalArgumentException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

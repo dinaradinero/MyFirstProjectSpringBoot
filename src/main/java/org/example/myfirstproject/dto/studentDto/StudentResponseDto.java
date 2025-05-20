@@ -28,6 +28,7 @@ public class StudentResponseDto{
     private String firstName;
     private LocalDate registrationDate;
     private Integer averageMark;
+    private String email;
 
 //    @JsonBackReference
     private List<CourseSimpleDto> courses;

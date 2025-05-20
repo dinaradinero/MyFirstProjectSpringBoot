@@ -36,9 +36,10 @@ public class Student {
     private String studentFirstName;
 
     private LocalDate studentRegistrationDate;
+    private String email;
     private Integer studentAverageMark;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "student_course",
             joinColumns = @JoinColumn(name = "student_id"),

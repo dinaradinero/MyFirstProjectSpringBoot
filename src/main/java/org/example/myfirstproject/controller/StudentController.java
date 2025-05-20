@@ -25,7 +25,6 @@ public class StudentController {
         return service.addNewStudent(requestDto);
     }
 
-
     @GetMapping
     public List<StudentResponseDto> findAllStudent (){
         return service.findAllStudents();

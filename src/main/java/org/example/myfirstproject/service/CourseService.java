@@ -42,20 +42,27 @@ public class CourseService {
             throw new ValidationException("Course request cannot be null");
         }
 
-        String courseNameDto = requestDto.getCourseName().trim();
-
-        if(findCourseByName(courseNameDto).isEmpty()){
-
-        Course course = new Course();
-        course.setCourseName(requestDto.getCourseName());
-        course.setCourseStudents(new ArrayList<>());
-
-        Course courseAfterSafe = coursesRepository.save(course);
-
-        return converter.courseToDto(courseAfterSafe);}
-        else {
-            throw new AlreadyExistException("Course with name " + courseNameDto + " already exists");
+        String courseName = requestDto.getCourseName();
+        if (courseName == null || courseName.trim().isEmpty()) {
+            throw new ValidationException("Course name cannot be null or empty");
         }
+
+        String trimmedName = courseName.trim();
+
+        List<CourseResponseDto> existingCourses = findCourseByName(trimmedName);
+        if (!existingCourses.isEmpty()) {
+            throw new AlreadyExistException("Course with name '" + trimmedName + "' already exists");
+        }
+
+        Course course = converter.courseFromDto(requestDto);
+        course.setCourseStudents(new ArrayList<>()); // Инициализируем список студентов
+
+        // Сохранение
+        Course savedCourse = coursesRepository.save(course);
+
+        // Конвертация в DTO
+        return converter.courseToDto(savedCourse);
+
     }
 
     //FindAllCourses
@@ -108,7 +115,7 @@ public class CourseService {
         }
 
 
-        List<CourseResponseDto> courseResponseDtos = coursesRepository.findCourseByCourseName(courseNameForSearch).stream()
+        List<CourseResponseDto> courseResponseDtos = coursesRepository.findCourseByCourseName(trimmedCourseName).stream()
                 .map(course -> converter.courseToDto(course))
                 .toList();
 
@@ -123,6 +130,7 @@ public class CourseService {
             throw new ValidationException("Course name can not be null");
         }
         String trimmedCourseName = courseNameForSearch.trim();
+
         if(trimmedCourseName.isEmpty()){
             throw new ValidationException("Course name can not be empty");
         }
@@ -132,10 +140,11 @@ public class CourseService {
         }
 
         if (!trimmedCourseName.matches("[a-zA-Z0-9\\s]+")) {
-            throw new ValidationException("Course name can only contain letters, numbers, and spaces");
+            throw new ValidationException("Course name can only contain letters, numbers");
         }
 
-        List<StudentResponseDto> studentResponseDtos = coursesRepository.findStudentByCourseName(courseNameForSearch).stream()
+        List <StudentResponseDto> studentResponseDtos = coursesRepository.findCourseByCourseName(trimmedCourseName).stream()
+                .flatMap(course -> course.getCourseStudents().stream())
                 .map(student -> converter.studentToDto(student))
                 .toList();
 
