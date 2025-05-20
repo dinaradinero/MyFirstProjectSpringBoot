@@ -10,6 +10,9 @@ import org.example.myfirstproject.entity.Course;
 import org.example.myfirstproject.entity.Student;
 import org.example.myfirstproject.repository.course.CourseRepository;
 
+import org.example.myfirstproject.service.exception.AlreadyExistException;
+import org.example.myfirstproject.service.exception.NotFoundException;
+import org.example.myfirstproject.service.exception.ValidationException;
 import org.example.myfirstproject.service.util.Converter;
 import org.springframework.stereotype.Service;
 
@@ -35,13 +38,31 @@ public class CourseService {
     //add
 
     public CourseResponseDto addCourse (CourseRequestDto requestDto) {
-        Course course = new Course();
-        course.setCourseName(requestDto.getCourseName());
-        course.setCourseStudents(new ArrayList<>());
+        if (requestDto == null) {
+            throw new ValidationException("Course request cannot be null");
+        }
 
-        Course courseAfterSafe = coursesRepository.save(course);
+        String courseName = requestDto.getCourseName();
+        if (courseName == null || courseName.trim().isEmpty()) {
+            throw new ValidationException("Course name cannot be null or empty");
+        }
 
-        return converter.courseToDto(courseAfterSafe);
+        String trimmedName = courseName.trim();
+
+        List<CourseResponseDto> existingCourses = findCourseByName(trimmedName);
+        if (!existingCourses.isEmpty()) {
+            throw new AlreadyExistException("Course with name '" + trimmedName + "' already exists");
+        }
+
+        Course course = converter.courseFromDto(requestDto);
+        course.setCourseStudents(new ArrayList<>()); // Инициализируем список студентов
+
+        // Сохранение
+        Course savedCourse = coursesRepository.save(course);
+
+        // Конвертация в DTO
+        return converter.courseToDto(savedCourse);
+
     }
 
     //FindAllCourses
@@ -56,30 +77,78 @@ public class CourseService {
     //FindById
 
     public Optional<CourseResponseDto> findCourseById (Integer idForSearch){
-        return coursesRepository.findById(idForSearch).stream()
+        if (idForSearch == null) {
+            throw new ValidationException("Course ID can not be null.");
+        }
+        if (idForSearch <= 0) {
+            throw new ValidationException("Course ID can not be negative");
+        }
+
+        Optional<CourseResponseDto> courseResponseDto = coursesRepository.findById(idForSearch).stream()
                 .map(course -> converter.courseToDto(course))
                 .findFirst();
+
+        if(courseResponseDto.isPresent()){
+            return courseResponseDto;
+        } else {
+            throw new NotFoundException("Course with id " + idForSearch + " not found");
+        }
     }
 
     //FindByName
 
-    public GeneralResponse<List<CourseResponseDto>> findCourseByName (String courseNameForSearch){
-        List<CourseResponseDto> courseResponseDtos = coursesRepository.findCourseByCourseName(courseNameForSearch).stream()
+    public List<CourseResponseDto> findCourseByName (String courseNameForSearch){
+        if (courseNameForSearch == null) {
+            throw new ValidationException("Course name can not be null");
+        }
+        String trimmedCourseName = courseNameForSearch.trim();
+        if(trimmedCourseName.isEmpty()){
+            throw new ValidationException("Course name can not be empty");
+        }
+
+        if(trimmedCourseName.length() < 3){
+            throw new ValidationException("Course name must be at least 3 characters long");
+        }
+
+        if (!trimmedCourseName.matches("[a-zA-Z0-9\\s]+")) {
+            throw new ValidationException("Course name can only contain letters, numbers, and spaces");
+        }
+
+
+        List<CourseResponseDto> courseResponseDtos = coursesRepository.findCourseByCourseName(trimmedCourseName).stream()
                 .map(course -> converter.courseToDto(course))
                 .toList();
 
-        return new GeneralResponse<>(courseResponseDtos);
+        return courseResponseDtos;
     }
 
 
     //findStudentsByCourseName
 
-    public GeneralResponse<List<StudentResponseDto>> findAllStudentsByCourseName (String courseNameForSearch) {
-        List<StudentResponseDto> studentResponseDtos = coursesRepository.findStudentByCourseName(courseNameForSearch).stream()
+    public List<StudentResponseDto> findAllStudentsByCourseName (String courseNameForSearch) {
+        if (courseNameForSearch == null) {
+            throw new ValidationException("Course name can not be null");
+        }
+        String trimmedCourseName = courseNameForSearch.trim();
+
+        if(trimmedCourseName.isEmpty()){
+            throw new ValidationException("Course name can not be empty");
+        }
+
+        if(trimmedCourseName.length() < 3){
+            throw new ValidationException("Course name must be at least 3 characters long");
+        }
+
+        if (!trimmedCourseName.matches("[a-zA-Z0-9\\s]+")) {
+            throw new ValidationException("Course name can only contain letters, numbers");
+        }
+
+        List <StudentResponseDto> studentResponseDtos = coursesRepository.findCourseByCourseName(trimmedCourseName).stream()
+                .flatMap(course -> course.getCourseStudents().stream())
                 .map(student -> converter.studentToDto(student))
                 .toList();
 
-        return new GeneralResponse<>(studentResponseDtos);
+        return studentResponseDtos;
     }
 
 }

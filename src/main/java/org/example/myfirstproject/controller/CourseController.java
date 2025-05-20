@@ -33,14 +33,16 @@ public class CourseController {
         return service.findCourseById(id);
     }
 
-    @GetMapping("/search/name")
-    public GeneralResponse<List<CourseResponseDto>> findCourseByName (@RequestParam String name){
+    @GetMapping("/search_by_name/{name}")
+    public List<CourseResponseDto> findCourseByName (@PathVariable String name){
         return service.findCourseByName(name);
-    }
-    @GetMapping("/search/students_by_name")
-    public GeneralResponse<List<StudentResponseDto>> findAllStudentsByCourseName (@RequestParam String name) {
+    } //localhost:8080/api/courses/search_by_name/Java Pro
+
+
+    @GetMapping("/search/students_by_course/{name}")
+    public List<StudentResponseDto> findAllStudentsByCourseName (@PathVariable String name) {
         return service.findAllStudentsByCourseName(name);
-    }
+    } //localhost:8080/api/courses/search/students_by_course/Java Pro
 
 
 }

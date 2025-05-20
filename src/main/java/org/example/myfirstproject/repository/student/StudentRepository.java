@@ -27,25 +27,5 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     List<Course> findCoursesByStudentFirstNameAndStudentLastName(String studentFirstName, String studentLastName);
 
-//    Optional<Student> deleteStudentByStudentId(Integer studentId);
 
-    //    public List<Student> findAll();
-//
-//    public Optional<Student> findById(Integer idForSearch);
-//
-//    public List<Student> findByName(String nameForSearch);
-//
-//    public List<Student> findByRegistrationDates(LocalDate startDate, LocalDate endDate);
-//
-//    public List<Student> findByAverageMarks(Integer minAverageMark, Integer maxAverageMark);
-//
-//    public List<Course> findCoursesByStudentId (Integer idForSearch);
-//
-//    public List<Course> findCoursesByStudentName (String nameForSearch);
-//
-//    public Optional<Student> addAverageMark (Integer idForSearch, Integer markForAdd);
-//
-//    public Optional<Student> addCourseToStudent (Integer idForSearch, Integer courseId);
-//
-//    public Optional<Student> deleteById(Integer id);
 }
